@@ -1,0 +1,7 @@
+{
+  "name": "winter-hearth",
+  "version": "0.1.0",
+  "description": "A calm winter night: a campfire for usage left, a snowdrift for memory, lit cabin windows for working agents",
+  "types": "./types/index.d.ts",
+  "license": "MIT"
+}
