@@ -1,0 +1,7 @@
+{
+  "name": "helper-desk",
+  "version": "0.1.0",
+  "description": "A purple task bar above the prompt that fills as Claude ticks off its to-do list, and a side panel with one live card per subagent: its current step, progress, tokens and time",
+  "types": "./types/index.d.ts",
+  "license": "MIT"
+}
