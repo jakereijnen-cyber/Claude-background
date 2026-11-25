@@ -1,5 +1,8 @@
 {
   "name": "claude-background",
   "owner": { "name": "jakereijnen-cyber" },
-  "plugins": [{ "name": "winter-hearth", "source": "./" }]
+  "plugins": [
+    { "name": "winter-hearth", "source": "./" },
+    { "name": "brain-dump", "source": "./plugins/brain-dump" }
+  ]
 }

@@ -1,0 +1,6 @@
+{
+  "name": "brain-dump",
+  "version": "0.1.0",
+  "description": "Catches a long, messy prompt, asks 2 or 3 questions about the gaps, then fills the prompt box with a clear four-part prompt: the job, the why, the guardrails, and what done means",
+  "license": "MIT"
+}
