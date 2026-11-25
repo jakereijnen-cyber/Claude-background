@@ -1,0 +1,6 @@
+{
+  "name": "reflect",
+  "version": "0.1.0",
+  "description": "When you give Claude a hard rule, a pop-up asks whether to keep it: Save everywhere (your CLAUDE.md), Save to vault (a rules folder you choose), or Skip",
+  "license": "MIT"
+}
