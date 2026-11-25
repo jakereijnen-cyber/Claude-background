@@ -173,19 +173,29 @@ export const register: Register = on => {
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     const list = await read($, tasks)
-    if (list.length === 0 || e.props.hasSurvey) return next(e)
+    const working = (await read($, desk)).cards.filter(c => c.state === 'running')
+    if ((list.length === 0 && working.length === 0) || e.props.hasSurvey) return next(e)
 
     const { Box, Text, Progress } = $.ui.resolve(e)
     const done = list.filter(t => t.status === 'completed').length
     const doing = list.find(t => t.status === 'in_progress')
     const caption = done === list.length ? 'All tasks done' : doing ? doing.active || doing.title : 'Up next: ' + (list.find(t => t.status === 'pending')?.title ?? '')
+    // The panel may not show on every app, so the bar names the helpers too.
+    const helpers = working.length === 0 ? '' : working.length === 1 ? `1 helper working: ${working[0].title}` : `${working.length} helpers working`
 
     return (
       <Box flexDirection="column">
-        <Progress label="Tasks" value={done} max={list.length} valueText={`${done} of ${list.length}`} color={PURPLE} />
-        <Text color={PURPLE} wrap="truncate-end">
-          {done} of {list.length} tasks · {caption}
-        </Text>
+        {list.length > 0 && <Progress label="Tasks" value={done} max={list.length} valueText={`${done} of ${list.length}`} color={PURPLE} />}
+        {list.length > 0 && (
+          <Text color={PURPLE} wrap="truncate-end">
+            {done} of {list.length} tasks · {caption}
+          </Text>
+        )}
+        {helpers !== '' && (
+          <Text color={PURPLE} dimColor wrap="truncate-end">
+            {helpers} · /helper-desk for details
+          </Text>
+        )}
       </Box>
     )
   })
