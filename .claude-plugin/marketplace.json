@@ -7,6 +7,7 @@
     { "name": "helper-desk", "source": "./plugins/helper-desk" },
     { "name": "cache-clock", "source": "./plugins/cache-clock" },
     { "name": "reflect", "source": "./plugins/reflect" },
-    { "name": "screen-share", "source": "./plugins/screen-share" }
+    { "name": "screen-share", "source": "./plugins/screen-share" },
+    { "name": "switchboard", "source": "./plugins/switchboard" }
   ]
 }

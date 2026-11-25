@@ -1,0 +1,7 @@
+{
+  "name": "switchboard",
+  "version": "0.1.0",
+  "description": "Type /mods to open one list of every mod you run: switch each one on or off, hide its panel, and see new mods show up by themselves",
+  "types": "./types/index.d.ts",
+  "license": "MIT"
+}
