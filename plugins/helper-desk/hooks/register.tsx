@@ -92,6 +92,12 @@ async function refresh($: EngineInterface): Promise<void> {
 
 // ---------- the to-do list ----------
 
+// The fields read off each to-do tool's call.
+type Called = { agentId?: string }
+type TodoWriteCall = Called & { todos: { content: string; status: TaskStatus; activeForm: string }[] }
+type TaskCreateCall = Called & { subject: string; activeForm?: string }
+type TaskUpdateCall = Called & { taskId: string; status?: TaskStatus | 'deleted'; subject?: string; activeForm?: string }
+
 function setStatus(list: Task[], id: string, status: TaskStatus | 'deleted', title?: string, active?: string): Task[] {
   if (status === 'deleted') return list.filter(t => t.id !== id)
   return list.map(t => (t.id === id ? { ...t, status, title: title ?? t.title, active: active ?? t.active } : t))
@@ -120,9 +126,10 @@ export const register: Register = on => {
   // Older builds: the whole list in one call.
   on('tool.call', { tool: 'TodoWrite' }, async ($, e, next) => {
     const ran = await next(e)
-    if (e.agentId === undefined && ran.deny === undefined && ran.isError !== true) {
+    const input = e as unknown as TodoWriteCall
+    if (input.agentId === undefined && ran.deny === undefined && ran.isError !== true && Array.isArray(input.todos)) {
       await update($, tasks, () =>
-        e.todos.map((t, i) => ({ id: String(i), title: t.content, active: t.activeForm, status: t.status })),
+        input.todos.map((t, i) => ({ id: String(i), title: t.content, active: t.activeForm, status: t.status })),
       )
     }
     return ran
@@ -131,10 +138,11 @@ export const register: Register = on => {
   // Newer builds: one task at a time.
   on('tool.call', { tool: 'TaskCreate' }, async ($, e, next) => {
     const ran = await next(e)
-    if (e.agentId === undefined && ran.deny === undefined && ran.isError !== true) {
+    const input = e as unknown as TaskCreateCall
+    if (input.agentId === undefined && ran.deny === undefined && ran.isError !== true) {
       const made = (ran.result as { task?: { id: string; subject: string } } | undefined)?.task
       if (made !== undefined) {
-        const task: Task = { id: made.id, title: made.subject, active: e.activeForm ?? made.subject, status: 'pending' }
+        const task: Task = { id: made.id, title: made.subject, active: input.activeForm ?? made.subject, status: 'pending' }
         await update($, tasks, list => [...list.filter(t => t.id !== task.id), task])
       }
     }
@@ -143,10 +151,11 @@ export const register: Register = on => {
 
   on('tool.call', { tool: 'TaskUpdate' }, async ($, e, next) => {
     const ran = await next(e)
-    if (e.agentId === undefined && ran.deny === undefined && ran.isError !== true && (e.status || e.subject || e.activeForm)) {
+    const input = e as unknown as TaskUpdateCall
+    if (input.agentId === undefined && ran.deny === undefined && ran.isError !== true && (input.status || input.subject || input.activeForm)) {
       await update($, tasks, list => {
-        const current = list.find(t => t.id === e.taskId)
-        return current === undefined ? list : setStatus(list, e.taskId, e.status ?? current.status, e.subject, e.activeForm)
+        const current = list.find(t => t.id === input.taskId)
+        return current === undefined ? list : setStatus(list, input.taskId, input.status ?? current.status, input.subject, input.activeForm)
       })
     }
     return ran
@@ -154,9 +163,10 @@ export const register: Register = on => {
 
   // Every tool call a subagent makes is one step on its card.
   on('tool.call', async ($, e, next) => {
-    if (e.agentId !== undefined) {
-      const mine = steps.get(e.agentId) ?? { count: 0, last: '' }
-      steps.set(e.agentId, { count: mine.count + 1, last: describe(e.tool, e as unknown as Record<string, unknown>) })
+    const input = e as unknown as Record<string, unknown> & { tool: string; agentId?: string }
+    if (input.agentId !== undefined) {
+      const mine = steps.get(input.agentId) ?? { count: 0, last: '' }
+      steps.set(input.agentId, { count: mine.count + 1, last: describe(input.tool, input) })
     }
     return next(e)
   }).catch(($, e, next) => next(e))
@@ -181,7 +191,7 @@ export const register: Register = on => {
     const doing = list.find(t => t.status === 'in_progress')
     const caption = done === list.length ? 'All tasks done' : doing ? doing.active || doing.title : 'Up next: ' + (list.find(t => t.status === 'pending')?.title ?? '')
     // The panel may not show on every app, so the bar names the helpers too.
-    const helpers = working.length === 0 ? '' : working.length === 1 ? `1 helper working: ${working[0].title}` : `${working.length} helpers working`
+    const helpers = working.length === 0 ? '' : working.length === 1 ? `1 helper working: ${working[0]?.title ?? ''}` : `${working.length} helpers working`
 
     return (
       <Box flexDirection="column">
