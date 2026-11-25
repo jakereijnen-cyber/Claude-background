@@ -1,0 +1,7 @@
+{
+  "name": "cache-clock",
+  "version": "0.1.0",
+  "description": "After each reply, a countdown until the chat's cache goes cold and the next message costs much more; Keep warm pings the cache just before it runs out so the timer starts again",
+  "types": "./types/index.d.ts",
+  "license": "MIT"
+}

@@ -4,6 +4,7 @@
   "plugins": [
     { "name": "winter-hearth", "source": "./" },
     { "name": "brain-dump", "source": "./plugins/brain-dump" },
-    { "name": "helper-desk", "source": "./plugins/helper-desk" }
+    { "name": "helper-desk", "source": "./plugins/helper-desk" },
+    { "name": "cache-clock", "source": "./plugins/cache-clock" }
   ]
 }
