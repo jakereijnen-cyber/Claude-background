@@ -1,0 +1,7 @@
+{
+  "name": "screen-share",
+  "version": "0.1.0",
+  "description": "Type /screen-share and every name, email, phone number and money amount on screen turns into a grey bar, while Claude still reads the real data",
+  "types": "./types/index.d.ts",
+  "license": "MIT"
+}
