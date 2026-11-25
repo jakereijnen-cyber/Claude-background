@@ -39,7 +39,7 @@ const { theme, problems } = makeColors({
 
 const LOOK: ThemeSetArgs = {
   colors: theme,
-  backdrop: { scene: SCENE, glass: { blur: 18, tint: '#10152c', opacity: 0.55 } },
+  backdrop: { scene: SCENE, glass: { blur: 8, tint: '#10152c', opacity: 0.4 } },
 }
 
 // ---------- numbers ----------
@@ -202,14 +202,14 @@ function scene(g: Gauges, now: number): string {
     <stop offset="1" stop-color="#2b3263"/>
   </linearGradient>
   <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#cdd6ee"/>
-    <stop offset="0.12" stop-color="#a9b4d6"/>
-    <stop offset="0.3" stop-color="#8f9bc4"/>
+    <stop offset="0" stop-color="#9aa6cc"/>
+    <stop offset="0.12" stop-color="#6c78a6"/>
+    <stop offset="0.3" stop-color="#4b5683"/>
   </linearGradient>
   <linearGradient id="drift" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#f5f8fd"/>
-    <stop offset="0.1" stop-color="#dbe2f3"/>
-    <stop offset="0.3" stop-color="#c3cde8"/>
+    <stop offset="0" stop-color="#d6ddef"/>
+    <stop offset="0.1" stop-color="#a3aed2"/>
+    <stop offset="0.3" stop-color="#7d89b4"/>
   </linearGradient>
   <radialGradient id="fireglow">
     <stop offset="0" stop-color="#f6a54a" stop-opacity="0.55"/>
@@ -238,8 +238,10 @@ function scene(g: Gauges, now: number): string {
   <path d="M0 1000 L0 660 L160 635 L330 670 L500 645 L680 680 L850 645 L1000 670 L1000 1000 Z" fill="#1c2349"/>
 </svg>
 
-<!-- left: the campfire, its sign in the snow in front of it -->
-<svg width="50%" height="100%" viewBox="0 0 360 1000" preserveAspectRatio="xMinYMax meet">
+<!-- left: the campfire, its sign in the snow in front of it.
+     The backdrop runs under the sidebar too, so the viewBox starts 230 units
+     left of the art to keep the fire clear of the window edge. -->
+<svg width="50%" height="100%" viewBox="-230 0 590 1000" preserveAspectRatio="xMinYMax meet">
   ${L.ground}
   ${pine(52, 230)}
   ${pine(330, 170, '#1a2742')}
